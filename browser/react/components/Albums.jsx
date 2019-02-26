@@ -1,14 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-export default ({albums})=>(
+export default ({albums, selectAlbum }) => (
   <div className="col-xs-10">
     <div className="albums">
       <h3>Albums</h3>
       <div className="row">
-      {console.log(albums)}
       {albums.map(album => 
-        <div className="col-xs-4" key={album.id}>
-          <a className="thumbnail" href="#">
+        <div key={album.id} className="col-xs-4">
+          <a className="thumbnail" href="#" onClick={() => selectAlbum(album.id)}>
             <img src={album.imageUrl} />
             <div className="caption">
               <h5>

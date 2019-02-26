@@ -1,22 +1,30 @@
 import React from 'react'
 
-export default () => (
+export default ({ selectedSong, isPlaying, play, pause, next, previous, progress}) => (
+  selectedSong.id ?
   <footer>
     <div className="pull-left">
-      <button className="btn btn-default">
+      <button onClick={previous} className="btn btn-default">
         <span className="glyphicon glyphicon-step-backward"></span>
       </button>
-      <button className="btn btn-default">
+      { !isPlaying ?
+      <button onClick={pause} className="btn btn-default">
+        <span className="glyphicon glyphicon-pause"></span>
+      </button>
+      :
+      <button onClick={play} className="btn btn-default">
         <span className="glyphicon glyphicon-play"></span>
       </button>
-      <button className="btn btn-default">
+      }
+      <button onClick={next} className="btn btn-default">
         <span className="glyphicon glyphicon-step-forward"></span>
       </button>
     </div>
     <div className="bar">
       <div className="progress">
-        <div className="progress-bar"></div>
+        <div className="progress-bar" style={{width: `${progress}%`}}></div>
       </div>
     </div>
 </footer>
-)
+:null
+);
