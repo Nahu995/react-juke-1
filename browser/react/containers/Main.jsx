@@ -1,4 +1,5 @@
 import React from 'react'
+import {Route,Redirect,Switch} from 'react-router-dom';
 import axios from'axios'
 import Sidebar from '../components/Sidebar'
 import Footer from '../components/Footer'
@@ -18,7 +19,6 @@ export default class Main extends React.Component{
       progress: 0,
     };
     this.selectAlbum = this.selectAlbum.bind(this);
-    this.deselectAlbum = this.deselectAlbum.bind(this);
     this.start = this.start.bind(this);
     this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
@@ -44,10 +44,6 @@ export default class Main extends React.Component{
     axios.get(`/api/albums/${albumId}`)
     .then(res => res.data)
     .then(serverAlbum => this.setState({selectedAlbum : serverAlbum}));
-  }
-
-  deselectAlbum(){ 
-    this.setState({selectedAlbum: {} })
   }
 
   start(song, songs){
@@ -99,12 +95,21 @@ export default class Main extends React.Component{
     const {albums, selectedAlbum, selectedSong, isPlaying, progress} = this.state
     return(
       <div id="main" className="container-fluid">
-        <Sidebar deselectAlbum={this.deselectAlbum}/>
-        {!selectedAlbum.id ? 
-          <Albums albums={albums} selectAlbum={this.selectAlbum}/>
-          :
-          <SingleAlbum selectedSong={selectedSong} start={this.start} album={selectedAlbum} />
-          }
+        <Sidebar />
+        <Switch>
+          <Route exact path="/albums" render={() => <Albums albums={albums} selectAlbum={this.selectAlbum}/>} /> 
+          <Route path="/albums/:id" 
+          render={({match}) => 
+            <SingleAlbum 
+              selectAlbum={this.selectAlbum}
+              selectedSong={selectedSong} 
+              start={this.start} 
+              album={selectedAlbum}
+              albumId={match.params.id}
+            />
+          }/>
+          <Redirect from="/" to="/albums"/>
+        </Switch>
         <Footer 
           selectedSong={selectedSong}
           isPlaying={isPlaying}
