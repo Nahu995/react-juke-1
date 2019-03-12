@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export default ({ selectedSong, isPlaying, play, pause, next, previous, progress}) => (
   selectedSong.id ?
@@ -7,7 +7,7 @@ export default ({ selectedSong, isPlaying, play, pause, next, previous, progress
       <button onClick={previous} className="btn btn-default">
         <span className="glyphicon glyphicon-step-backward"></span>
       </button>
-      { !isPlaying ?
+      { isPlaying ?
       <button onClick={pause} className="btn btn-default">
         <span className="glyphicon glyphicon-pause"></span>
       </button>

@@ -16,27 +16,34 @@ export default class Main extends React.Component{
       isPlaying: false,
       currentSongList: [],
       progress: 0,
-    }
+    };
     this.selectAlbum = this.selectAlbum.bind(this);
     this.deselectAlbum = this.deselectAlbum.bind(this);
     this.start = this.start.bind(this);
+    this.play = this.play.bind(this);
     this.pause = this.pause.bind(this);
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
   }
-  componentDidMount(){
+
+  componentDidMount() {
     axios.get('/api/albums')
-    .then( response => response.data)
-    .then( serverAlbums => this.setState({albums:serverAlbums}));
-    audio.addEventListener('ended',()=>{
+    .then( res => res.data)
+    .then( serverAlbums => this.setState({ albums: serverAlbums}));
+    audio.addEventListener('ended',() => {
       this.next();
+    });
+    audio.addEventListener('timeupdate', () => {
+      this.setState({
+        progress: 100 * audio.currentTime / audio.duration
+      });
     });
   }
 
   selectAlbum(albumId){
     axios.get(`/api/albums/${albumId}`)
     .then(res => res.data)
-    .then(serverAlbum => this.setState({selectedAlbum : serverAlbum}))
+    .then(serverAlbum => this.setState({selectedAlbum : serverAlbum}));
   }
 
   deselectAlbum(){ 
@@ -51,17 +58,17 @@ export default class Main extends React.Component{
   loadSong(audioUrl) {
     audio.src = audioUrl;
     audio.load();
-    audio.play();
+    this.play();
   }
 
   play() {
     audio.play();
-    this.setState({ isPlaying: true},()=>{})
+    this.setState({ isPlaying: true });
   }
 
   pause() {
-    this.setState({isPlaying: false});
     audio.pause();
+    this.setState({isPlaying: false });
   }
 
   findSongIndex() {
